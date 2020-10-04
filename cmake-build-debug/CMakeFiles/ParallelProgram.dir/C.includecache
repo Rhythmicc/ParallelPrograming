@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/OmpPrimitive.h
+basic.h
+../include/basic.h
+
+../include/basic.h
+
+/Users/lianhaocheng/CLionProjects/ParallelProgram/main.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+sys/time.h
+-
+omp.h
+-
+immintrin.h
+-
+OmpPrimitive.h
+/Users/lianhaocheng/CLionProjects/ParallelProgram/OmpPrimitive.h
+

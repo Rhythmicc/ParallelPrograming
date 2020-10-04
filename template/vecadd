@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <sys/time.h>
+#ifdef LIMIT_THREAD
+#include <omp.h>
+#endif
+#ifdef mm256
+#include <immintrin.h>
+#endif
+
+
+void OmpEnhencedVectorAdd(void*va, void*vb, void*vc, int eleSize, int len) {
+    if (sizeof(float) == eleSize) {
+        float *a = (float *) va, *b = (float *) vb, *c = (float *) vc;
+#pragma omp for schedule(dynamic)
+        for (int i = 0; i < len; ++i) c[i] = a[i] + b[i];
+    } else if (sizeof(double) == eleSize) {
+        double *a = (double *) va, *b = (double *) vb, *c = (double *) vc;
+#pragma omp for schedule(dynamic)
+        for (int i = 0; i < len; ++i) c[i] = a[i] + b[i];
+    }
+}
+
+void VectorAdd(void*va, void*vb, void*vc, int eleSize, int len) {
+    if (sizeof(float) == eleSize) {
+        float *a = (float *) va, *b = (float *) vb, *c = (float *) vc;
+        for (int i = 0; i < len; ++i) c[i] = a[i] + b[i];
+    } else if (sizeof(double) == eleSize) {
+        double *a = (double *) va, *b = (double *) vb, *c = (double *) vc;
+        for (int i = 0; i < len; ++i) c[i] = a[i] + b[i];
+    }
+}
+
+int main(int argc, char**argv) {
+    int OutputFlag = 0, vecLen = 100000000;
+    for(int i=0; i<argc; ++i) {
+        if (!strcmp("--with-output", argv[i])) OutputFlag = 1;
+        if (!strcmp("-n", argv[i])) {
+            vecLen = atoi(argv[i+1]);
+            ++i;
+        }
+    }
+    srand(time(NULL));
+#ifdef LIMIT_THREAD
+    omp_set_num_threads(8);
+#endif
+    float*a = (float *)malloc(sizeof(float ) * vecLen);
+    float*b = (float *)malloc(sizeof(float ) * vecLen);
+    float*c = (float *)malloc(sizeof(float ) * vecLen);
+    for (int i=0;i<vecLen;++i){
+        a[i] = rand() % 1000 / 1000.0;
+        b[i] = rand() % 1000 / 1000.0;
+    }
+    if (OutputFlag) {
+        for (int i = 0; i <= 40; ++i)putchar(i < 40 ? '-' : '\n');
+        printf("Vector A:\n[");
+        for (int i = 0; i < vecLen; ++i) {
+            if (!(i % 10)) printf("\n  %.3f%s", a[i], i + 1 < vecLen ? ", " : "\n");
+            else printf("%.3f%s", a[i], i + 1 < vecLen ? ", " : "\n");
+        }
+        printf("]\n");
+        printf("Vector B:\n[");
+        for (int i = 0; i < vecLen; ++i) {
+            if (!(i % 10)) printf("\n  %.3f%s", b[i], i + 1 < vecLen ? ", " : "\n");
+            else printf("%.3f%s", b[i], i + 1 < vecLen ? ", " : "\n");
+        }
+        printf("]\n");
+        for (int i = 0; i <= 40; ++i)putchar(i < 40 ? '-' : '\n');
+    }
+    struct timeval t1, t2;
+    gettimeofday(&t1, NULL);
+    VectorAdd(a, b, c, sizeof(float), vecLen);
+    gettimeofday(&t2, NULL);
+    if (OutputFlag) {
+        printf("Vector C:\n[");
+        for (int i = 0; i < vecLen; ++i) {
+            if (!(i % 10)) printf("\n  %.3f%s", c[i], i + 1 < vecLen ? ", " : "\n");
+            else printf("%.3f%s", c[i], i + 1 < vecLen ? ", " : "\n");
+        }
+        printf("]\n");
+    }
+    printf("Use time: %.3lf ms\n", (double)(t2.tv_sec - t1.tv_sec) * 1000.0 + (t2.tv_usec - t1.tv_usec) / 1000.0);
+
+    gettimeofday(&t1, NULL);
+    OmpEnhencedVectorAdd(a, b, c, sizeof(float), vecLen);
+    gettimeofday(&t2, NULL);
+    if (OutputFlag) {
+        printf("Vector C:\n[");
+        for (int i = 0; i < vecLen; ++i) {
+            if (!(i % 10)) printf("\n  %.3f%s", c[i], i + 1 < vecLen ? ", " : "\n");
+            else printf("%.3f%s", c[i], i + 1 < vecLen ? ", " : "\n");
+        }
+        printf("]\n");
+    }
+    printf("Use time: %.3lf ms\n", (double)(t2.tv_sec - t1.tv_sec) * 1000.0 + (t2.tv_usec - t1.tv_usec) / 1000.0);
+    free(a), free(b), free(c);
+    return 0;
+}

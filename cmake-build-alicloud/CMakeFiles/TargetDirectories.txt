@@ -1,0 +1,4 @@
+/tmp/tmp.YHZ58sq9mM/cmake-build-alicloud/CMakeFiles/edit_cache.dir
+/tmp/tmp.YHZ58sq9mM/cmake-build-alicloud/CMakeFiles/ParallelProgram.dir
+/tmp/tmp.YHZ58sq9mM/cmake-build-alicloud/CMakeFiles/rebuild_cache.dir
+/tmp/tmp.YHZ58sq9mM/cmake-build-alicloud/CMakeFiles/sdnn.dir

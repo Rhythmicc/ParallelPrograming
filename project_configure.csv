@@ -1,0 +1,6 @@
+compile_tool,gcc -std=c11,-Ofast -I /usr/local/opt/libomp/include -L /usr/local/opt/libomp/lib -lomp -I include
+compile_filename,main.c
+executable_filename,cmake-build-debug/ParallelProgram
+input_file,cmake-build-debug/input.txt
+template_root,template/
+server_target,root@aliyun.rhythmlian.cn:/root/CLionProjects/ParallelProgram/,22

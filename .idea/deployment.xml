@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="AliCloud (430717ae-802d-43df-8535-b6ec38263bcd)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/ParallelProgram" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-alicloud" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="AliCloud (e1d18cd3-3d1e-49ac-85a9-4f3123e5c96a)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.YHZ58sq9mM" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-alicloud" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

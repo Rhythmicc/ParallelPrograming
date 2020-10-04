@@ -1,0 +1,1 @@
+/usr/local/bin/gcc-9 -fopenmp -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/usr/local/opt/qt/lib CMakeFiles/finalproject-SDNN.dir/finalproject-SDNN/main.c.o  -o finalproject-SDNN 

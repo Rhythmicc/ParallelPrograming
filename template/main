@@ -1,0 +1,7 @@
+#include <stdio.h>
+
+int main() {
+#pragma omp paralell
+    printf("Hello, World!\n");
+    return 0;
+}

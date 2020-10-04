@@ -1,0 +1,4 @@
+/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles/sdnn.dir
+/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles/ParallelProgram.dir
