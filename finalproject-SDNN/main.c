@@ -18,9 +18,18 @@ typedef struct {
     int *rowpointer;
 } SMatrix;
 
+/**
+ * 计算array的前缀和
+ * @param array
+ * @param n
+ */
 void prefixSum(int *array, int n) {
     int np = ceil(1.0 * n / nthreads);
 
+    /**
+     * 分块，计算块内前缀和
+     * 把每块最后的元素存到 lastitem
+     */
 #pragma omp parallel for
     for (int tid = 0; tid < nthreads; ++tid) {
         int start = min(tid * np, n), end = min(start + np, n);
@@ -32,8 +41,14 @@ void prefixSum(int *array, int n) {
         lastitem[tid] = array[end - 1];
     }
 
+    /**
+     * 计算lastitem的前缀和
+     */
     for (int i = 1; i < nthreads; ++i) lastitem[i] += lastitem[i - 1];
 
+    /**
+     * 更新块数据
+     */
 #pragma omp parallel for
     for (int tid = 1; tid < nthreads; ++tid) {
         int start = min(tid * np, n), end = min(start + np, n), bias = lastitem[tid-1];
@@ -45,16 +60,25 @@ void DenseToCSR(VALUE_TYPE *C, int m, int n, SMatrix *csr) {
     csr->rowpointer = (int *) malloc(sizeof(int) * (m + 1));
 #pragma omp parallel for
     for(int i=0;i<=m;++i) csr->rowpointer[i] = 0;
+    /**
+     * 统计每行元素
+     */
 #pragma omp parallel for
     for (int i = 0; i < m; ++i)
         for (int j = 0; j < n; ++j)
             if (C[i * n + j]) ++csr->rowpointer[i+1];
 
+    /**
+     * 计算前缀和
+     */
     prefixSum(csr->rowpointer, m + 1); /// parallel
     csr->columnindex = (int *) malloc(sizeof(int) * csr->rowpointer[m]);
     csr->value = (VALUE_TYPE *) malloc(sizeof(VALUE_TYPE) * csr->rowpointer[m]);
     int *row = csr->rowpointer, *col = csr->columnindex;
     VALUE_TYPE*val = csr->value;
+    /**
+     * 将行坐标、值填入CSR
+     */
 #pragma omp parallel for
     for (int i = 0; i < m; ++i) {
         int*sp_c = sp + i * n, len = 0, rindx = row[i];
@@ -67,6 +91,14 @@ void DenseToCSR(VALUE_TYPE *C, int m, int n, SMatrix *csr) {
     }
 }
 
+/**
+ * 更新C矩阵的一行
+ * @param line C的行指针
+ * @param val 选中的A的值
+ * @param B_val B的行数据
+ * @param B_col B的行数据
+ * @param k B的行长度
+ */
 void update_line(VALUE_TYPE*line, VALUE_TYPE val, VALUE_TYPE*B_val, int*B_col, int k) {
     while (k--) line[*B_col++] += val * (*B_val++);
 }
@@ -120,6 +152,9 @@ int main(int argc, char **argv) {
     double time_load = (t4.tv_sec - t3.tv_sec) * 1000.0 + (t4.tv_usec - t3.tv_usec) / 1000.0;
     printf("Weight matrix load time: %f ms \n", time_load);
 
+    /**
+     * 预申请空间，减少空间反复创建的开销
+     */
     mC = mA;
     nC = nB;
     long TolC = mA * nB;
@@ -132,10 +167,7 @@ int main(int argc, char **argv) {
     gettimeofday(&t3, NULL);
     for (int k = 0; k < 120; ++k) {
 #pragma omp parallel for
-        for (int i = 0; i < TolC; i += 8) _mm256_storeu_ps(C0 + i, v);
-
-#pragma omp parallel for
-        for (int i = 0; i < TolC; ++i) C0[i] = 0;
+        for (int i = 0; i < TolC; i += 8) _mm256_storeu_ps(C0 + i, v); /// zeroing with avx
 
         gettimeofday(&t1, NULL);
         SMatrix *CurB = B + k;
@@ -148,7 +180,7 @@ int main(int argc, char **argv) {
             for (int j = start_j; j < end_j; ++j) {
                 start_r = B_row[A_col[j]], end_r = B_row[A_col[j] + 1] - start_r, val = A_val[j];
                 update_line(C_line, val, B_val + start_r, B_col + start_r, end_r);
-                //for (int r = start_r; r < end_r; ++r) C_line[B_col[r]] += val * B_val[r];
+                // for (int r = start_r; r < end_r; ++r) C_line[B_col[r]] += val * B_val[r];
             }
         }
         gettimeofday(&t2, NULL);
