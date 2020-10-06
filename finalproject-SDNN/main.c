@@ -10,7 +10,7 @@
 #define min(a, b) (a)<(b)?(a):(b)
 #define max(a, b) (a)>(b)?(a):(b)
 __m256 v;
-int nthreads;
+int nthreads, *sp, *lastitem;
 
 typedef struct {
     VALUE_TYPE *value;
@@ -18,44 +18,27 @@ typedef struct {
     int *rowpointer;
 } SMatrix;
 
-void scan(int *array, int n) {
-    int np = ceil(1.0 * n / nthreads), old, new, *lastitem = (int *) malloc(sizeof(int) * nthreads);
+void prefixSum(int *array, int n) {
+    int np = ceil(1.0 * n / nthreads);
 
 #pragma omp parallel for
     for (int tid = 0; tid < nthreads; ++tid) {
-        int start = tid * np, end = start + np;
-        start = start > n ? n : start;
-        end = end > n ? n : end;
+        int start = min(tid * np, n), end = min(start + np, n);
         if (start == end) {
             lastitem[tid] = 0;
             continue;
         }
-        old = array[start];
-        array[start] = 0;
-        for (int i = start + 1; i <= end; ++i)
-            if (i != end) {
-                new = array[i];
-                array[i] = old + array[i - 1];
-                old = new;
-            } else lastitem[tid] = old + array[i - 1];
+        for (int i = start + 1; i < end; ++i) array[i] += array[i - 1];
+        lastitem[tid] = array[end - 1];
     }
 
-    old = lastitem[0];
-    lastitem[0] = 0;
-    for (int i = 1; i < nthreads; ++i) {
-        new = lastitem[i];
-        lastitem[i] = old + lastitem[i - 1];
-        old = new;
-    }
+    for (int i = 1; i < nthreads; ++i) lastitem[i] += lastitem[i - 1];
 
 #pragma omp parallel for
-    for (int tid = 0; tid < nthreads; ++tid) {
-        int start = tid * np, end = start + np, bias = lastitem[tid];
-        start = start > n ? n : start;
-        end = end > n ? n : end;
+    for (int tid = 1; tid < nthreads; ++tid) {
+        int start = min(tid * np, n), end = min(start + np, n), bias = lastitem[tid-1];
         for (int i = start; i < end; ++i) array[i] += bias;
     }
-    free(lastitem);
 }
 
 void DenseToCSR(VALUE_TYPE *C, int m, int n, SMatrix *csr) {
@@ -65,23 +48,27 @@ void DenseToCSR(VALUE_TYPE *C, int m, int n, SMatrix *csr) {
 #pragma omp parallel for
     for (int i = 0; i < m; ++i)
         for (int j = 0; j < n; ++j)
-            if (C[i * n + j]) ++csr->rowpointer[i];
+            if (C[i * n + j]) ++csr->rowpointer[i+1];
 
-    scan(csr->rowpointer, m + 1);
-    csr->columnindex = (int *) malloc(sizeof(int) * (csr->rowpointer[m]));
+    prefixSum(csr->rowpointer, m + 1); /// parallel
+    csr->columnindex = (int *) malloc(sizeof(int) * csr->rowpointer[m]);
     csr->value = (VALUE_TYPE *) malloc(sizeof(VALUE_TYPE) * csr->rowpointer[m]);
     int *row = csr->rowpointer, *col = csr->columnindex;
     VALUE_TYPE*val = csr->value;
 #pragma omp parallel for
     for (int i = 0; i < m; ++i) {
-        int sp_c[n], len = 0;
+        int*sp_c = sp + i * n, len = 0, rindx = row[i];
         VALUE_TYPE*C_line = C + i * n;
         for (int j = 0; j < n; ++j)if (C_line[j]) sp_c[len++] = j;
-        for (int j = 0; j < len; ++j) {
-            col[row[i] + j] = sp_c[j];
-            val[row[i] + j] = C_line[sp_c[j]];
+        while (len--) {
+            col[rindx] = *sp_c;
+            val[rindx++] = C_line[*sp_c++];
         }
     }
+}
+
+void update_line(VALUE_TYPE*line, VALUE_TYPE val, VALUE_TYPE*B_val, int*B_col, int k) {
+    while (k--) line[*B_col++] += val * (*B_val++);
 }
 
 int main(int argc, char **argv) {
@@ -139,11 +126,16 @@ int main(int argc, char **argv) {
     double sum_gemm = 0, sum_bias = 0;
     v = _mm256_setzero_ps();
     VALUE_TYPE *C0 = (VALUE_TYPE *) malloc(TolC * sizeof(VALUE_TYPE));
+    sp = (int*)malloc(sizeof(int) * TolC);
+    lastitem = (int *) malloc(sizeof(int) * nthreads);
 
     gettimeofday(&t3, NULL);
     for (int k = 0; k < 120; ++k) {
 #pragma omp parallel for
         for (int i = 0; i < TolC; i += 8) _mm256_storeu_ps(C0 + i, v);
+
+#pragma omp parallel for
+        for (int i = 0; i < TolC; ++i) C0[i] = 0;
 
         gettimeofday(&t1, NULL);
         SMatrix *CurB = B + k;
@@ -154,9 +146,9 @@ int main(int argc, char **argv) {
             int start_j = A_row[i], end_j = A_row[i + 1], start_r, end_r;
             VALUE_TYPE val, *C_line = C0 + i * nC;
             for (int j = start_j; j < end_j; ++j) {
-                start_r = B_row[A_col[j]], end_r = B_row[A_col[j] + 1], val = A_val[j];
-                for (int r = start_r; r < end_r; ++r)
-                    C_line[B_col[r]] += val * B_val[r];
+                start_r = B_row[A_col[j]], end_r = B_row[A_col[j] + 1] - start_r, val = A_val[j];
+                update_line(C_line, val, B_val + start_r, B_col + start_r, end_r);
+                //for (int r = start_r; r < end_r; ++r) C_line[B_col[r]] += val * B_val[r];
             }
         }
         gettimeofday(&t2, NULL);
@@ -240,5 +232,7 @@ int main(int argc, char **argv) {
     free(A.columnindex);
     free(A.value);
     free(C0);
+    free(sp);
+    free(lastitem);
     return 0;
 }

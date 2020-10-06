@@ -96,12 +96,12 @@ clean: CMakeFiles/ParallelProgram.dir/clean
 CMakeFiles/sdnn.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sdnn.dir/build.make CMakeFiles/sdnn.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sdnn.dir/build.make CMakeFiles/sdnn.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles --progress-num= "Built target sdnn"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target sdnn"
 .PHONY : CMakeFiles/sdnn.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/sdnn.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/sdnn.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/sdnn.dir/rule

@@ -1,16 +1,4 @@
 /usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9 -G "CodeBlocks - Unix Makefiles" /Users/lianhaocheng/CLionProjects/ParallelProgram
 -- Configuring done
-CMake Error at CMakeLists.txt:12 (add_executable):
-  Cannot find source file:
-
-    finalproject-SDNN/main.c
-
-  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .m .M .mm .h .hh .h++ .hm
-  .hpp .hxx .in .txx
-
-
-CMake Error at CMakeLists.txt:12 (add_executable):
-  No SOURCES given to target: sdnn
-
-
-CMake Generate step failed.  Build files cannot be regenerated correctly.
+-- Generating done
+-- Build files have been written to: /Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug

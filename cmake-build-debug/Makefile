@@ -156,6 +156,33 @@ ParallelProgram/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelProgram.dir/build.make CMakeFiles/ParallelProgram.dir/build
 .PHONY : ParallelProgram/fast
 
+finalproject-SDNN/main.o: finalproject-SDNN/main.c.o
+
+.PHONY : finalproject-SDNN/main.o
+
+# target to build an object file
+finalproject-SDNN/main.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sdnn.dir/build.make CMakeFiles/sdnn.dir/finalproject-SDNN/main.c.o
+.PHONY : finalproject-SDNN/main.c.o
+
+finalproject-SDNN/main.i: finalproject-SDNN/main.c.i
+
+.PHONY : finalproject-SDNN/main.i
+
+# target to preprocess a source file
+finalproject-SDNN/main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sdnn.dir/build.make CMakeFiles/sdnn.dir/finalproject-SDNN/main.c.i
+.PHONY : finalproject-SDNN/main.c.i
+
+finalproject-SDNN/main.s: finalproject-SDNN/main.c.s
+
+.PHONY : finalproject-SDNN/main.s
+
+# target to generate assembly for a file
+finalproject-SDNN/main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sdnn.dir/build.make CMakeFiles/sdnn.dir/finalproject-SDNN/main.c.s
+.PHONY : finalproject-SDNN/main.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -193,6 +220,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... ParallelProgram"
 	@echo "... sdnn"
+	@echo "... finalproject-SDNN/main.o"
+	@echo "... finalproject-SDNN/main.i"
+	@echo "... finalproject-SDNN/main.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
