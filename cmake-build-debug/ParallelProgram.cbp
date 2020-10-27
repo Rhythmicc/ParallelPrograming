@@ -37,6 +37,48 @@
 					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="cholesky">
+				<Option output="/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/cholesky" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLIMIT_THREAD"/>
+					<Add directory="/Users/lianhaocheng/CLionProjects/ParallelProgram/include"/>
+					<Add directory="/usr/local/Cellar/gcc/9.3.0_1/lib/gcc/9/gcc/x86_64-apple-darwin19/9.3.0/include"/>
+					<Add directory="/usr/local/Cellar/gcc/9.3.0_1/lib/gcc/9/gcc/x86_64-apple-darwin19/9.3.0/include-fixed"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 cholesky"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cholesky/fast">
+				<Option output="/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/cholesky" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DLIMIT_THREAD"/>
+					<Add directory="/Users/lianhaocheng/CLionProjects/ParallelProgram/include"/>
+					<Add directory="/usr/local/Cellar/gcc/9.3.0_1/lib/gcc/9/gcc/x86_64-apple-darwin19/9.3.0/include"/>
+					<Add directory="/usr/local/Cellar/gcc/9.3.0_1/lib/gcc/9/gcc/x86_64-apple-darwin19/9.3.0/include-fixed"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 cholesky/fast"/>
+					<CompileFile command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j16 -f &quot;/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="sdnn">
 				<Option output="/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug/sdnn" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/lianhaocheng/CLionProjects/ParallelProgram/cmake-build-debug"/>
@@ -122,6 +164,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/lianhaocheng/CLionProjects/ParallelProgram/cholesky/main.c">
+			<Option target="cholesky"/>
+		</Unit>
 		<Unit filename="/Users/lianhaocheng/CLionProjects/ParallelProgram/finalproject-SDNN/main.c">
 			<Option target="sdnn"/>
 		</Unit>

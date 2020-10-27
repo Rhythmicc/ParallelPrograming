@@ -131,6 +131,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named cholesky
+
+# Build rule for target.
+cholesky: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cholesky
+.PHONY : cholesky
+
+# fast build rule for target.
+cholesky/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cholesky.dir/build.make CMakeFiles/cholesky.dir/build
+.PHONY : cholesky/fast
+
+#=============================================================================
 # Target rules for targets named sdnn
 
 # Build rule for target.
@@ -155,6 +168,33 @@ ParallelProgram: cmake_check_build_system
 ParallelProgram/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ParallelProgram.dir/build.make CMakeFiles/ParallelProgram.dir/build
 .PHONY : ParallelProgram/fast
+
+cholesky/main.o: cholesky/main.c.o
+
+.PHONY : cholesky/main.o
+
+# target to build an object file
+cholesky/main.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cholesky.dir/build.make CMakeFiles/cholesky.dir/cholesky/main.c.o
+.PHONY : cholesky/main.c.o
+
+cholesky/main.i: cholesky/main.c.i
+
+.PHONY : cholesky/main.i
+
+# target to preprocess a source file
+cholesky/main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cholesky.dir/build.make CMakeFiles/cholesky.dir/cholesky/main.c.i
+.PHONY : cholesky/main.c.i
+
+cholesky/main.s: cholesky/main.c.s
+
+.PHONY : cholesky/main.s
+
+# target to generate assembly for a file
+cholesky/main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cholesky.dir/build.make CMakeFiles/cholesky.dir/cholesky/main.c.s
+.PHONY : cholesky/main.c.s
 
 finalproject-SDNN/main.o: finalproject-SDNN/main.c.o
 
@@ -219,7 +259,11 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ParallelProgram"
+	@echo "... cholesky"
 	@echo "... sdnn"
+	@echo "... cholesky/main.o"
+	@echo "... cholesky/main.i"
+	@echo "... cholesky/main.s"
 	@echo "... finalproject-SDNN/main.o"
 	@echo "... finalproject-SDNN/main.i"
 	@echo "... finalproject-SDNN/main.s"
