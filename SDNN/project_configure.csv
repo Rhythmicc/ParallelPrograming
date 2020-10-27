@@ -1,0 +1,6 @@
+compile_tool,gcc-9 -Ofast -fopenmp -lm, -frename-registers -funroll-loops -mavx2
+compile_filename,main.c
+executable_filename,dist/finalproject-SDNN
+input_file,dist/input.txt
+template_root,template/
+server_target,amd02@2001:da8:258:6d42:5a41:4793:80de:382a:/home/amd02/HaochengLian/SDNN/,22
